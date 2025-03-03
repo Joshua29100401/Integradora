@@ -1,0 +1,14 @@
+export 'package:flutter/material.dart';
+export 'package:integradora/controller/user_provider.dart';
+export 'package:integradora/view/braille.dart';
+export 'package:integradora/view/desempeno.dart';
+export 'package:integradora/view/lecciones.dart';
+export 'package:integradora/view/lenguaS.dart';
+export 'package:integradora/view/nosotros.dart';
+export 'package:integradora/view/pagina_i.dart';
+export 'package:integradora/view/inicioSesion.dart';
+export 'package:integradora/view/provider.dart';
+export 'package:integradora/view/registro.dart';
+export 'package:integradora/view/revisarUser.dart';
+export 'package:provider/provider.dart';
+export 'package:supabase_flutter/supabase_flutter.dart';

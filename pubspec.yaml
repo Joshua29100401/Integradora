@@ -1,0 +1,32 @@
+name: integradora
+description: "A new Flutter project."
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.0
+  cupertino_icons: ^1.0.8
+  supabase_flutter: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/logo.png"
+  remove_alpha_ios: true
+
+  flutter_lints: ^4.0.0
+flutter:
+
+  uses-material-design: true
+  assets:
+    - assets/images/

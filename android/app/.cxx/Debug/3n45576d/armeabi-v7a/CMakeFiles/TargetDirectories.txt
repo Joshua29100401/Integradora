@@ -1,0 +1,2 @@
+C:/Users/michi/OneDrive/Documents/VSC/integradora/android/app/.cxx/Debug/3n45576d/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/michi/OneDrive/Documents/VSC/integradora/android/app/.cxx/Debug/3n45576d/armeabi-v7a/CMakeFiles/rebuild_cache.dir
