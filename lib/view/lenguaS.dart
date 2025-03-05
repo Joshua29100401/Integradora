@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:integradora/controller/ejercicioSeleccionadoSenas.dart';
 import 'package:integradora/controller/obtenerNivelesLenguaS.dart';
 import 'package:integradora/view/nivel.dart';
 
@@ -78,22 +77,16 @@ class LenguaS extends StatelessWidget {
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(nivel.descripcion),
-                      trailing: Chip(
-                        label: Text(
-                          nivel.estado ? 'Activo' : 'Inactivo',
-                          style: TextStyle(
-                            color: nivel.estado ? Colors.green : Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      trailing: Text(
+                        nivel.estado ? 'Activo' : '', // Mostrar solo 'Activo' si es true, de lo contrario vacío
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green, // Puedes cambiar el color si es necesario
                         ),
                       ),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NivelDetalleSenas(nivelData: nivel.id),
-                          ),
-                        );
+                        // Aquí puedes navegar a otra página si es necesario
                       },
                     ),
                   ],

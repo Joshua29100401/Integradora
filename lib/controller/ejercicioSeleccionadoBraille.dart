@@ -3,7 +3,8 @@ import 'package:integradora/view/views.dart';
 class NivelDetalleBraille extends StatefulWidget {
   final int nivelData;
 
-  const NivelDetalleBraille({Key? key, required this.nivelData}) : super(key: key);
+  const NivelDetalleBraille({Key? key, required this.nivelData})
+      : super(key: key);
 
   @override
   _NivelDetalleState createState() => _NivelDetalleState();
@@ -23,7 +24,7 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
   Future<void> obtenerDatosLeccion() async {
     try {
       final response = await Supabase.instance.client
-          .from('contenido_nivel_lenguaS') 
+          .from('contenido_nivel_braille')
           .select()
           .eq('id_nivel', widget.nivelData)
           .maybeSingle();
@@ -44,51 +45,57 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
     }
   }
 
-Future<void> completarNivel(BuildContext context) async {
-  final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
-  final userData = transactionProvider.userData; 
-  final userId = userData?['id']; 
-  final nivelCompletado = widget.nivelData; 
+  Future<void> completarNivel(BuildContext context) async {
+    final transactionProvider =
+        Provider.of<TransactionProvider>(context, listen: false);
+    final userData = transactionProvider.userData;
+    final userId = userData?['id'];
+    final nivelCompletado = widget.nivelData;
 
-  if (userId == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Error: No se pudo obtener el ID del usuario')),
-    );
-    return;
-  }
-
-  print('ID del usuario: $userId');
-  print('Nivel completado: $nivelCompletado');
-
-  try {
-    final response = await transactionProvider.supabase
-        .from('progreso')
-        .update({'nivel_braille': nivelCompletado}) // ⚠️ ¿Es el campo correcto? (Cámbialo si es `nivel_lengua_senas`)
-        .eq('id_usuario', userId)
-        .select(); // ✅ Esto asegura que obtienes una respuesta adecuada
-
-    print('Respuesta de Supabase: $response');
-
-    if (response.isNotEmpty) {
-      print('¡Lección $nivelCompletado completada!');
+    if (userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('¡Lección $nivelCompletado completada de braille!')),
+        const SnackBar(
+            content: Text('Error: No se pudo obtener el ID del usuario')),
       );
-    } else {
-      print('Error al actualizar el progreso: Respuesta vacía');
+      return;
+    }
+
+    print('ID del usuario: $userId');
+    print('Nivel completado: $nivelCompletado');
+
+    try {
+      final response = await transactionProvider.supabase
+          .from('progreso')
+          .update({
+            'nivel_braille': nivelCompletado
+          }) 
+          .eq('id_usuario', userId)
+          .select();
+
+      print('Respuesta de Supabase: $response');
+
+      if (response.isNotEmpty) {
+        print('¡Lección $nivelCompletado completada!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('¡Lección $nivelCompletado completada de braille!')),
+        );
+      } else {
+        print('Error al actualizar el progreso: Respuesta vacía');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'Error al actualizar el progreso: No se encontró el usuario')),
+        );
+      }
+    } catch (error) {
+      print('❌ Error al actualizar el progreso: $error');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error al actualizar el progreso: No se encontró el usuario')),
+        SnackBar(content: Text('Error al actualizar el progreso: $error')),
       );
     }
-  } catch (error) {
-    print('❌ Error al actualizar el progreso: $error');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error al actualizar el progreso: $error')),
-    );
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +117,8 @@ Future<void> completarNivel(BuildContext context) async {
                     ? const Center(
                         child: Text(
                           "No hay datos disponibles.",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       )
                     : Column(
@@ -134,7 +142,8 @@ Future<void> completarNivel(BuildContext context) async {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
+      style: const TextStyle(
+          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
     );
   }
 
@@ -169,8 +178,7 @@ Future<void> completarNivel(BuildContext context) async {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: ElevatedButton(
-onPressed: () => completarNivel(context),
-
+        onPressed: () => completarNivel(context),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

@@ -2,7 +2,7 @@ class Nivel {
   final int id;
   final String nombre;
   final String descripcion;
-  final bool estado;
+  bool estado; // Cambiar a variable mutable
   final String imagenUrl; // Nueva propiedad para la URL de la imagen
 
   Nivel({
@@ -21,5 +21,9 @@ class Nivel {
       estado: json['estado'] == 1,
       imagenUrl: json['imagen_url'] ?? '', // Cargar URL
     );
+  }
+
+  void toggleEstado() {
+    estado = !estado;
   }
 }
