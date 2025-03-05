@@ -4,7 +4,7 @@ import 'package:integradora/view/nivel.dart';
 
 class LenguaS extends StatelessWidget {
   const LenguaS({super.key});
-//
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,12 +77,13 @@ class LenguaS extends StatelessWidget {
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(nivel.descripcion),
-                      trailing: Text(
-                        nivel.estado ? 'Activo' : '', // Mostrar solo 'Activo' si es true, de lo contrario vacío
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green, // Puedes cambiar el color si es necesario
+                      trailing: Chip(
+                        label: Text(
+                          nivel.estado ? 'Activo' : 'Inactivo',
+                          style: TextStyle(
+                            color: nivel.estado ? Colors.green : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       onTap: () {

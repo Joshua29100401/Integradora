@@ -18,7 +18,7 @@ class Nivel {
       id: json['id'],
       nombre: json['nombre'],
       descripcion: json['descripcion'],
-      estado: json['estado'] == 1,
+      estado: json['estado'] as bool, // Correcto para bool en Supabase
       imagenUrl: json['imagen_url'] ?? '', // Cargar URL
     );
   }

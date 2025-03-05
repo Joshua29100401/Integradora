@@ -12,7 +12,7 @@ Future<List<Nivel>> obtenerNivelesLenguaS() async {
 Future<void> actualizarEstado(Nivel nivel) async {
   final response = await Supabase.instance.client
       .from('niveles_lenguaS')
-      .update({'estado': nivel.estado ? 1 : 0})
+      .update({'estado': nivel.estado}) // Correcto para booleanos
       .eq('id', nivel.id)
       .select();
 
