@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:integradora/controller/clase_usuario.dart';
+import 'package:integradora/controller/clase_usuario.dart'; // Importa tu modelo de usuario
 
-class UserProvider with ChangeNotifier {
+class UserProvider extends ChangeNotifier {
   UserModel? _user;
 
   UserModel? get user => _user;

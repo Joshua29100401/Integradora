@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:integradora/controller/ejercicioSeleccionadoSenas.dart';
 import 'package:integradora/controller/obtenerNivelesLenguaS.dart';
 import 'package:integradora/view/nivel.dart';
 
@@ -87,7 +88,12 @@ class LenguaS extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        // Aquí puedes navegar a otra página si es necesario
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NivelDetalleSenas(nivelData: nivel.id),
+                          ),
+                        );
                       },
                     ),
                   ],

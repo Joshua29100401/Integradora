@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     final provider = Provider.of<TransactionProvider>(context, listen: false);
-    bool success = await provider.login(username, password);
+    bool success = await provider.login(username, password, context);
 
     if (success) {
       Navigator.pushReplacement(
@@ -71,11 +71,11 @@ class _LoginPageState extends State<LoginPage> {
     return const Column(
       children: [
         Text(
-          "Welcome Back",
+          "Bienvenido a Mis manos hablarán",
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
-        Text("Enter your credentials to login"),
+        Text("Inicia sesión para continuar"),
       ],
     );
   }
@@ -84,15 +84,15 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildTextField("Username", Icons.person, false, _usernameController),
+        _buildTextField("Usuario", Icons.person, false, _usernameController),
         const SizedBox(height: 10),
-        _buildTextField("Password", Icons.lock, true, _passwordController),
+        _buildTextField("Contraseña", Icons.lock, true, _passwordController),
       ],
     );
   }
 
-  Widget _buildTextField(
-      String hint, IconData icon, bool isPassword, TextEditingController controller) {
+  Widget _buildTextField(String hint, IconData icon, bool isPassword,
+      TextEditingController controller) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -112,13 +112,16 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _obscureText = !_obscureText; // Alterna el estado de visibilidad
+                    _obscureText =
+                        !_obscureText; // Alterna el estado de visibilidad
                   });
                 },
               )
             : null,
       ),
-      obscureText: isPassword ? _obscureText : false, // Solo oculta el texto si es una contraseña
+      obscureText: isPassword
+          ? _obscureText
+          : false, // Solo oculta el texto si es una contraseña
     );
   }
 
@@ -128,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextButton(
         onPressed: () {},
         child: const Text(
-          "Forgot password?",
+          "¿Has olvidado tu constraseña?",
           style: TextStyle(color: Colors.purple),
         ),
       ),
@@ -146,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.purple,
       ),
       child: const Text(
-        "Login",
+        "Iniciar Sesión",
         style: TextStyle(fontSize: 18, color: Colors.white),
       ),
     );
@@ -156,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account? "),
+        const Text("¿No tienes una cuenta?"),
         TextButton(
           onPressed: () {
             Navigator.pop(context);

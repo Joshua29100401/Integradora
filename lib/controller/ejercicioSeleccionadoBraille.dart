@@ -127,7 +127,7 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
                           _buildSectionTitle('Tema:'),
                           _buildSectionContent(datosLeccion?['tema']),
                           const SizedBox(height: 10),
-                          _buildSectionTitle('Información:'),
+                          _buildSectionTitle('Antes de empezar la lección:'),
                           _buildSectionContent(datosLeccion?['informacion']),
                           const SizedBox(height: 20),
                           _buildImage(datosLeccion?['imagen_url']),
