@@ -29,7 +29,7 @@ class _LeccionesState extends State<Lecciones> {
   try {
     final List<dynamic> response = await transactionProvider.supabase
         .from('progreso')
-        .select('nivel_braille')
+        .select('progreso')
         .eq('id_usuario', userId);
 
     print('Datos obtenidos de Supabase: $response'); // 🛠 Debug
