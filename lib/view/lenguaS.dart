@@ -4,7 +4,7 @@ import 'package:integradora/view/nivel.dart';
 
 class LenguaS extends StatelessWidget {
   const LenguaS({super.key});
-
+//
   @override
   Widget build(BuildContext context) {
     return Scaffold(
