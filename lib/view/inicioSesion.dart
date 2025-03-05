@@ -13,6 +13,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _obscureText = true; // Controla si la contraseña está oculta o visible
 
   Future<void> _login() async {
     final String username = _usernameController.text.trim();
@@ -103,8 +104,21 @@ class _LoginPageState extends State<LoginPage> {
         fillColor: Colors.purple.withOpacity(0.1),
         filled: true,
         prefixIcon: Icon(icon, color: Colors.purple),
+        suffixIcon: isPassword
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.purple,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText; // Alterna el estado de visibilidad
+                  });
+                },
+              )
+            : null,
       ),
-      obscureText: isPassword,
+      obscureText: isPassword ? _obscureText : false, // Solo oculta el texto si es una contraseña
     );
   }
 

@@ -52,7 +52,7 @@ Future<void> completarNivel(BuildContext context) async {
 
   if (userId == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error: No se pudo obtener el ID del usuario')),
+      const SnackBar(content: Text('Error: No se pudo obtener el ID del usuario')),
     );
     return;
   }
@@ -60,23 +60,34 @@ Future<void> completarNivel(BuildContext context) async {
   print('ID del usuario: $userId');
   print('Nivel completado: $nivelCompletado');
 
-  final response = await transactionProvider.supabase
-      .from('progreso')
-      .update({'nivel_braille': nivelCompletado}) 
-      .eq('id_usuario', userId); 
+  try {
+    final response = await transactionProvider.supabase
+        .from('progreso')
+        .update({'nivel_braille': nivelCompletado}) // ⚠️ ¿Es el campo correcto? (Cámbialo si es `nivel_lengua_senas`)
+        .eq('id_usuario', userId)
+        .select(); // ✅ Esto asegura que obtienes una respuesta adecuada
 
-  if (response.error != null) {
-    print('Error al actualizar el progreso: ${response.error!.message}');
+    print('Respuesta de Supabase: $response');
+
+    if (response.isNotEmpty) {
+      print('¡Lección $nivelCompletado completada!');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('¡Lección $nivelCompletado completada de braille!')),
+      );
+    } else {
+      print('Error al actualizar el progreso: Respuesta vacía');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error al actualizar el progreso: No se encontró el usuario')),
+      );
+    }
+  } catch (error) {
+    print('❌ Error al actualizar el progreso: $error');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error al actualizar el progreso: ${response.error!.message}')),
-    );
-  } else {
-    print('¡Lección $nivelCompletado completada!');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('¡Lección $nivelCompletado completada!')),
+      SnackBar(content: Text('Error al actualizar el progreso: $error')),
     );
   }
 }
+
 
 
   @override

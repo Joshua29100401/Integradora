@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:integradora/view/views.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:provider/provider.dart'; // Asegúrate de tener esta importación
 
 class NivelDetalleSenas extends StatefulWidget {
   final int nivelData;
 
-  const NivelDetalleSenas({Key? key, required this.nivelData}) : super(key: key);
+  const NivelDetalleSenas({Key? key, required this.nivelData})
+      : super(key: key);
 
   @override
   _NivelDetalleState createState() => _NivelDetalleState();
@@ -12,8 +15,8 @@ class NivelDetalleSenas extends StatefulWidget {
 
 class _NivelDetalleState extends State<NivelDetalleSenas> {
   Map<String, dynamic>? datosLeccion;
-  bool isLoading = true;  
-  String? error; 
+  bool isLoading = true;
+  String? error;
 
   @override
   void initState() {
@@ -24,7 +27,7 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
   Future<void> obtenerDatosLeccion() async {
     try {
       final response = await Supabase.instance.client
-          .from('contenido_nivel_lenguaS') 
+          .from('contenido_nivel_lenguaS')
           .select()
           .eq('id_nivel', widget.nivelData)
           .maybeSingle();
@@ -45,10 +48,55 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
     }
   }
 
-  void completarNivel() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('¡Lección ${widget.nivelData} completada!')),
-    );
+  Future<void> completarNivel(BuildContext context) async {
+    final transactionProvider =
+        Provider.of<TransactionProvider>(context, listen: false);
+    final userData = transactionProvider.userData;
+    final userId = userData?['id'];
+    final nivelCompletado = widget.nivelData;
+
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Error: No se pudo obtener el ID del usuario')),
+      );
+      return;
+    }
+
+    print('ID del usuario: $userId');
+    print('Nivel completado: $nivelCompletado');
+
+    try {
+      final response = await transactionProvider.supabase
+          .from('progreso')
+          .update({
+            'nivel_senas': nivelCompletado // Cambié a 'nivel_senas'
+          })
+          .eq('id_usuario', userId)
+          .select();
+
+      print('Respuesta de Supabase: $response');
+
+      if (response.isNotEmpty) {
+        print('¡Lección $nivelCompletado completada!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('¡Lección $nivelCompletado completada de señas!')),
+        );
+      } else {
+        print('Error al actualizar el progreso: Respuesta vacía');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'Error al actualizar el progreso: No se encontró el usuario')),
+        );
+      }
+    } catch (error) {
+      print('❌ Error al actualizar el progreso: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al actualizar el progreso: $error')),
+      );
+    }
   }
 
   @override
@@ -71,7 +119,8 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
                     ? const Center(
                         child: Text(
                           "No hay datos disponibles.",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       )
                     : Column(
@@ -95,7 +144,8 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
+      style: const TextStyle(
+          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
     );
   }
 
@@ -109,10 +159,10 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
   Widget _buildImage(String? imageUrl) {
     if (imageUrl != null && imageUrl.isNotEmpty) {
       return AspectRatio(
-        aspectRatio: 16 / 9, // Ajuste para evitar distorsión
+        aspectRatio: 16 / 9,
         child: Image.network(
           imageUrl,
-          fit: BoxFit.contain, // Evita recortes y muestra la imagen completa
+          fit: BoxFit.contain,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return const Center(child: CircularProgressIndicator());
@@ -130,7 +180,9 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: ElevatedButton(
-        onPressed: completarNivel,
+        onPressed: () async {
+          await completarNivel(context);
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -146,4 +198,3 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
     );
   }
 }
-
