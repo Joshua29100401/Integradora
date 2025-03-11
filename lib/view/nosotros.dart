@@ -21,7 +21,7 @@ class Nosotros extends StatelessWidget {
                   height: 200,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/lenguajes.jpeg'),
+                      image: AssetImage('assets/images/lenguajes.jpeg'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -52,7 +52,7 @@ class Nosotros extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                'Aunque ciertamente existen aplicaciones de este tipo, ...',
+                'Aunque ciertamente existen aplicaciones de este tipo, la cantidad de ellas es mínima en comparación con otros temas considerados más relevantes. Las aplicaciones existentes\ntienen diferencias notorias respecto a nuestra idea planteada, lo que puede ser una desventaja para aquellos que requieren aplicaciones que permitan la inclusión o el aprendizaje en\nun mismo lugar de forma dinámica. Sin embargo, esto nos brinda la oportunidad de entrar en un mercado menos saturado y ofrecer un software realmente útil, que atienda a\npersonas con capacidades diferentes, quienes a menudo son las menos favorecidas o tomadas en cuenta.',
                 style: TextStyle(fontSize: 16),
               ),
             ),
@@ -61,7 +61,7 @@ class Nosotros extends StatelessWidget {
               height: 180,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/lenguaje_señas_1.jpeg'),
+                  image: AssetImage('assets/images/lenguaje_señas_1.jpeg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -78,7 +78,7 @@ class Nosotros extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                'En Mis Manos Hablarán, creemos firmemente en la inclusión ...',
+                'En Mis Manos Hablarán, creemos firmemente en la inclusión y la accesibilidad para todos. Nuestra misión es empoderar a las personas sordas, con dificultades auditivas y con discapacidades visuales mediante la promoción del lenguaje de señas y braille. Nos esforzamos por crear un mundo donde la comunicación no tenga barreras y donde todas las personas tengan la oportunidad de participar plenamente en la sociedad.',
               ),
             ),
             const Padding(
@@ -93,7 +93,7 @@ class Nosotros extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
-                'La idea surgió a partir de la observación de que solo había algunas aplicaciones ...',
+                'La idea surgió a partir de la observación de que solo había algunas aplicaciones que enseñaban estos dos lenguajes pero por separado, nosotros pensamos en integrar los dos lenguajes en una sola aplicación para que fuera más factible el aprendizaje de estos.',
               ),
             ),
             const Padding(
@@ -108,7 +108,7 @@ class Nosotros extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.all(20.0),
               child: Text(
-                'Inclusión: Creemos en un mundo donde todas las personas ...',
+                'Inclusión: Creemos en un mundo donde todas las personas, independientemente de sus habilidades, tengan las mismas oportunidades de comunicarse y participar.\n\nAccesibilidad: Trabajamos para eliminar las barreras de comunicación y crear entornos accesibles para todos.\n\nEmpoderamiento: Proporcionamos a las personas las herramientas y los recursos necesarios para que puedan comunicarse de manera efectiva y autónoma.\n\nEducación: Promovemos el aprendizaje continuo y ofrecemos programas educativos para fomentar el conocimiento del lenguaje de señas y braille.',
               ),
             ),
             Padding(

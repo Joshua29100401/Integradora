@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';import 'package:integradora/view/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:integradora/view/provider.dart';
 import 'package:provider/provider.dart';
 
 class RevisarUser extends StatelessWidget {
@@ -16,7 +17,8 @@ class RevisarUser extends StatelessWidget {
       body: Center(
         child: userData != null
             ? Text('Tu ID de usuario es: ${userData['id']}')
-            : Text('No hay usuario autenticado'),
+            : Text(
+                'No hay usuario autenticado Holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
       ),
     );
   }

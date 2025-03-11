@@ -1,4 +1,5 @@
 import 'package:integradora/view/views.dart';
+import 'package:integradora/view/mi_perfil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
             home: provider.isLoggedIn ? const PaginaInicio() : const LoginPage(),
             routes: {
               '/home': (context) => const PaginaInicio(),
-              '/perfil': (context) => const RevisarUser(),
+              '/perfil': (context) => const MiPerfil(),
               '/lecciones': (context) => const Lecciones(),
               '/desempeno': (context) => const Desempeno(),
               '/nosotros': (context) => const Nosotros(),
