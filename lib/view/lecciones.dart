@@ -38,10 +38,6 @@ class _LeccionesState extends State<Lecciones> {
       final transactionProvider =
           Provider.of<TransactionProvider>(context, listen: false);
 
-      if (transactionProvider.supabase == null) {
-        return [];
-      }
-
       final List<dynamic> response = await transactionProvider.supabase
           .from('progreso')
           .select(tipoLeccion)
@@ -51,13 +47,37 @@ class _LeccionesState extends State<Lecciones> {
         return [];
       }
 
-      return response.map<String>((row) {
-        final nivel = row[tipoLeccion];
-        return nivel != null ? 'Lección $nivel completada' : 'Lección desconocida';
-      }).toList();
+      List<String> lecciones = [];
+
+      for (var row in response) {
+        dynamic nivel = row[tipoLeccion];
+        List<int> leccionesExtraidas = _extraerNumeros(nivel);
+        for (var leccion in leccionesExtraidas) {
+          lecciones.add('Lección $leccion completada');
+        }
+      }
+
+      return lecciones;
     } catch (error) {
       return [];
     }
+  }
+
+  List<int> _extraerNumeros(dynamic entrada) {
+    List<int> resultado = [];
+
+    void extraer(dynamic elemento) {
+      if (elemento is int) {
+        resultado.add(elemento);
+      } else if (elemento is List) {
+        for (var subElemento in elemento) {
+          extraer(subElemento);
+        }
+      }
+    }
+
+    extraer(entrada);
+    return resultado;
   }
 
   @override

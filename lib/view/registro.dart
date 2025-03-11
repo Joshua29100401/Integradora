@@ -12,7 +12,8 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -32,7 +33,10 @@ class _SignupPageState extends State<SignupPage> {
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+    if (name.isEmpty ||
+        email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       _showMessage("Todos los campos son obligatorios", isError: true);
       return;
     }
@@ -48,7 +52,7 @@ class _SignupPageState extends State<SignupPage> {
       await supabase.from('usuarios').insert({
         'nombre_usuario': name,
         'email': email,
-        'contraseña': password, 
+        'contraseña': password,
         'fecha_registro': DateTime.now().toIso8601String(),
       });
 
@@ -88,9 +92,11 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildHeader() {
     return const Column(
       children: [
-        Text("Sign up", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+        Text("Sign up",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
         SizedBox(height: 10),
-        Text("Create your account", style: TextStyle(fontSize: 15, color: Colors.grey)),
+        Text("Crear tu cuenta",
+            style: TextStyle(fontSize: 15, color: Colors.grey)),
       ],
     );
   }
@@ -98,17 +104,19 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildInputFields() {
     return Column(
       children: [
-        _buildTextField("Username", Icons.person, _nameController),
+        _buildTextField("Usuario", Icons.person, _nameController),
         const SizedBox(height: 15),
-        _buildTextField("Email", Icons.email, _emailController),
+        _buildTextField("Correo", Icons.email, _emailController),
         const SizedBox(height: 15),
-        _buildPasswordField("Password", _passwordController, _isPasswordVisible, () {
+        _buildPasswordField(
+            "Contraseña", _passwordController, _isPasswordVisible, () {
           setState(() {
             _isPasswordVisible = !_isPasswordVisible;
           });
         }),
         const SizedBox(height: 15),
-        _buildPasswordField("Confirm Password", _confirmPasswordController, _isConfirmPasswordVisible, () {
+        _buildPasswordField("Confirmar contraseña", _confirmPasswordController,
+            _isConfirmPasswordVisible, () {
           setState(() {
             _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
           });
@@ -117,7 +125,8 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildTextField(String hint, IconData icon, TextEditingController controller) {
+  Widget _buildTextField(
+      String hint, IconData icon, TextEditingController controller) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -133,7 +142,8 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildPasswordField(String hint, TextEditingController controller, bool isVisible, VoidCallback toggleVisibility) {
+  Widget _buildPasswordField(String hint, TextEditingController controller,
+      bool isVisible, VoidCallback toggleVisibility) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -164,7 +174,8 @@ class _SignupPageState extends State<SignupPage> {
       ),
       child: _isLoading
           ? const CircularProgressIndicator(color: Colors.white)
-          : const Text("Sign up", style: TextStyle(fontSize: 20, color: Colors.white)),
+          : const Text("Registrarse",
+              style: TextStyle(fontSize: 20, color: Colors.white)),
     );
   }
 
@@ -172,13 +183,13 @@ class _SignupPageState extends State<SignupPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account? "),
+        const Text("¿Ya tienes una cuenta?"),
         TextButton(
           onPressed: () {
             Navigator.pop(context);
             Navigator.pushNamed(context, '/inicioS');
           },
-          child: const Text("Login", style: TextStyle(color: Colors.purple)),
+          child: const Text("Ingresar", style: TextStyle(color: Colors.purple)),
         ),
       ],
     );

@@ -1,16 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:integradora/view/views.dart';
+
 
 class NivelDetalleBraille extends StatefulWidget {
   final int nivelData;
 
-  const NivelDetalleBraille({Key? key, required this.nivelData})
-      : super(key: key);
+  const NivelDetalleBraille({Key? key, required this.nivelData}) : super(key: key);
 
   @override
-  _NivelDetalleState createState() => _NivelDetalleState();
+  _NivelDetalleBrailleState createState() => _NivelDetalleBrailleState();
 }
 
-class _NivelDetalleState extends State<NivelDetalleBraille> {
+class _NivelDetalleBrailleState extends State<NivelDetalleBraille> {
   Map<String, dynamic>? datosLeccion;
   bool isLoading = true;
   String? error;
@@ -46,17 +49,13 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
   }
 
   Future<void> completarNivel(BuildContext context) async {
-    final transactionProvider =
-        Provider.of<TransactionProvider>(context, listen: false);
+    final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
     final userData = transactionProvider.userData;
     final userId = userData?['id'];
     final nivelCompletado = widget.nivelData;
 
     if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Error: No se pudo obtener el ID del usuario')),
-      );
+      _mostrarMensaje(context, 'Error: No se pudo obtener el ID del usuario');
       return;
     }
 
@@ -66,35 +65,31 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
     try {
       final response = await transactionProvider.supabase
           .from('progreso')
-          .update({
-            'nivel_braille': nivelCompletado
-          }) 
+          .select('nivel_braille')
           .eq('id_usuario', userId)
-          .select();
+          .single();
 
-      print('Respuesta de Supabase: $response');
+      List<dynamic> nivelesCompletados = response['nivel_braille'] ?? [];
+      List<int> nivelesList = nivelesCompletados.map((e) => int.tryParse(e.toString()) ?? 0).toList();
 
-      if (response.isNotEmpty) {
-        print('¡Lección $nivelCompletado completada!');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text('¡Lección $nivelCompletado completada de braille!')),
-        );
-      } else {
-        print('Error al actualizar el progreso: Respuesta vacía');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text(
-                  'Error al actualizar el progreso: No se encontró el usuario')),
-        );
+      if (!nivelesList.contains(nivelCompletado)) {
+        nivelesList.add(nivelCompletado);
       }
+
+      await transactionProvider.supabase
+          .from('progreso')
+          .update({'nivel_braille': nivelesList})
+          .eq('id_usuario', userId);
+
+      _mostrarMensaje(context, '¡Lección $nivelCompletado completada de braille!');
     } catch (error) {
       print('❌ Error al actualizar el progreso: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al actualizar el progreso: $error')),
-      );
+      _mostrarMensaje(context, 'Error al actualizar el progreso: $error');
     }
+  }
+
+  void _mostrarMensaje(BuildContext context, String mensaje) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensaje)));
   }
 
   @override
@@ -117,8 +112,7 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
                     ? const Center(
                         child: Text(
                           "No hay datos disponibles.",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       )
                     : Column(
@@ -127,7 +121,7 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
                           _buildSectionTitle('Tema:'),
                           _buildSectionContent(datosLeccion?['tema']),
                           const SizedBox(height: 10),
-                          _buildSectionTitle('Antes de empezar la lección:'),
+                          _buildSectionTitle('Antes de empezar la lección:'),
                           _buildSectionContent(datosLeccion?['informacion']),
                           const SizedBox(height: 20),
                           _buildImage(datosLeccion?['imagen_url']),
@@ -142,8 +136,7 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
     );
   }
 
@@ -157,10 +150,10 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
   Widget _buildImage(String? imageUrl) {
     if (imageUrl != null && imageUrl.isNotEmpty) {
       return AspectRatio(
-        aspectRatio: 16 / 9, // Ajuste para evitar distorsión
+        aspectRatio: 16 / 9,
         child: Image.network(
           imageUrl,
-          fit: BoxFit.contain, // Evita recortes y muestra la imagen completa
+          fit: BoxFit.contain,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             return const Center(child: CircularProgressIndicator());
@@ -182,9 +175,7 @@ class _NivelDetalleState extends State<NivelDetalleBraille> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.green,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         child: const Text(
           "Completado",

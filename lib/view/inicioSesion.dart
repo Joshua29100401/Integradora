@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextButton(
         onPressed: () {},
         child: const Text(
-          "¿Has olvidado tu constraseña?",
+          "",
           style: TextStyle(color: Colors.purple),
         ),
       ),
@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushNamed(context, '/Registro');
           },
           child: const Text(
-            "Sign Up",
+            "Registrarse",
             style: TextStyle(color: Colors.purple, fontWeight: FontWeight.bold),
           ),
         )

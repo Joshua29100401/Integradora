@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:integradora/view/views.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:provider/provider.dart'; // Asegúrate de tener esta importación
+import 'package:integradora/view/views.dart'; // Asegúrate de tener esta importación
 
 class NivelDetalleSenas extends StatefulWidget {
   final int nivelData;
 
-  const NivelDetalleSenas({Key? key, required this.nivelData})
-      : super(key: key);
+  const NivelDetalleSenas({Key? key, required this.nivelData}) : super(key: key);
 
   @override
   _NivelDetalleState createState() => _NivelDetalleState();
@@ -49,48 +48,50 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
   }
 
   Future<void> completarNivel(BuildContext context) async {
-    final transactionProvider =
-        Provider.of<TransactionProvider>(context, listen: false);
+    final transactionProvider = Provider.of<TransactionProvider>(context, listen: false);
     final userData = transactionProvider.userData;
     final userId = userData?['id'];
     final nivelCompletado = widget.nivelData;
 
     if (userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Error: No se pudo obtener el ID del usuario')),
+        const SnackBar(content: Text('Error: No se pudo obtener el ID del usuario')),
       );
       return;
     }
 
-    print('ID del usuario: $userId');
-    print('Nivel completado: $nivelCompletado');
+    print('📌 ID del usuario: $userId');
+    print('📌 Nivel completado: $nivelCompletado');
 
     try {
+      // Obtiene la lista actual de niveles completados
       final response = await transactionProvider.supabase
           .from('progreso')
-          .update({
-            'nivel_senas': nivelCompletado // Cambié a 'nivel_senas'
-          })
+          .select('nivel_senas')
           .eq('id_usuario', userId)
-          .select();
+          .single();
 
-      print('Respuesta de Supabase: $response');
+      print('🔍 Respuesta obtenida de Supabase: $response');
 
-      if (response.isNotEmpty) {
-        print('¡Lección $nivelCompletado completada!');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('¡Lección $nivelCompletado completada de señas!')),
-        );
-      } else {
-        print('Error al actualizar el progreso: Respuesta vacía');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text(
-                  'Error al actualizar el progreso: No se encontró el usuario')),
-        );
+      List<dynamic> nivelesCompletados = response['nivel_senas'] ?? [];
+      List<int> nivelesList = nivelesCompletados.map((e) => int.tryParse(e.toString()) ?? 0).toList();
+
+      // Agrega el nuevo nivel si no está en la lista
+      if (!nivelesList.contains(nivelCompletado)) {
+        nivelesList.add(nivelCompletado);
       }
+
+      // Actualiza el progreso del usuario en Supabase
+      await transactionProvider.supabase
+          .from('progreso')
+          .update({'nivel_senas': nivelesList}) // Se envía como array
+          .eq('id_usuario', userId);
+
+      print('✅ Nivel $nivelCompletado agregado correctamente.');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('¡Lección $nivelCompletado completada de señas!')),
+      );
     } catch (error) {
       print('❌ Error al actualizar el progreso: $error');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -119,8 +120,7 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
                     ? const Center(
                         child: Text(
                           "No hay datos disponibles.",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       )
                     : Column(
@@ -129,7 +129,7 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
                           _buildSectionTitle('Tema:'),
                           _buildSectionContent(datosLeccion?['tema']),
                           const SizedBox(height: 10),
-                          _buildSectionTitle('Antes de empezar la lección:'),
+                          _buildSectionTitle('Antes de empezar la lección:'),
                           _buildSectionContent(datosLeccion?['informacion']),
                           const SizedBox(height: 20),
                           _buildImage(datosLeccion?['imagen_url']),
@@ -144,8 +144,7 @@ class _NivelDetalleState extends State<NivelDetalleSenas> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
     );
   }
 

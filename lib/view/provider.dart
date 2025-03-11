@@ -19,7 +19,7 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
 
     final session = supabase.auth.currentSession;
-    final email = session?.user?.email;
+    final email = session?.user.email;
 
     if (email != null) {
       print('✅ Sesión activa encontrada para el usuario: $email');
